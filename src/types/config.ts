@@ -100,3 +100,38 @@ export type BlogPostData = {
 export type ExpressiveCodeConfig = {
 	theme: string;
 };
+
+export type SeoConfig = {
+	description: string;
+	defaultOgImage: string;
+	siteUrl: string;
+};
+
+export type GiscusConfig = {
+	enabled: boolean;
+	repo: `${string}/${string}`;
+	repoId: string;
+	category: string;
+	categoryId: string;
+};
+
+export type AnalyticsConfig = {
+	cloudflareBeaconToken: string;
+};
+
+export type AnimeEntry = {
+	title: string;
+	cover?: string;
+	year: number;
+	status: "planned" | "watching" | "completed";
+	score?: number;
+	review?: string;
+	url?: string;
+};
+
+export type NoteEntry = {
+	published: Date;
+	body: string;
+	images: string[];
+	tags: string[];
+};

@@ -1,0 +1,105 @@
+---
+import { getCollection } from "astro:content";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
+
+const entries = (
+	await getCollection("anime", ({ data }) =>
+		import.meta.env.PROD ? data.draft !== true : true,
+	)
+).sort((a, b) => b.data.year - a.data.year);
+
+const statusLabels = {
+	planned: "想看",
+	watching: "在看",
+	completed: "看过",
+} as const;
+---
+
+<MainGridLayout title="追番" description="PG 的动画观看记录与短评。">
+	<section class="content-surface p-5 md:p-7" aria-labelledby="anime-title">
+		<header class="section-heading">
+			<div>
+				<p class="section-kicker">ANIME LOG</p>
+				<h1 id="anime-title">追番</h1>
+			</div>
+			<span>{entries.length} 部</span>
+		</header>
+
+		{entries.length === 0 ? (
+			<div class="empty-state">
+				<Icon name="material-symbols:movie-outline-rounded" />
+				<h2>片单还在整理</h2>
+				<p>看过和准备看的作品，会从这里慢慢长出来。</p>
+			</div>
+		) : (
+			<div class="anime-grid">
+				{entries.map(({ data }) => (
+					<article class="anime-card">
+						<div class="anime-cover">
+							{data.cover ? (
+								<img src={data.cover} alt={`${data.title} 封面`} loading="lazy" />
+							) : (
+								<Icon name="material-symbols:movie-outline-rounded" />
+							)}
+							<span class:list={["status-chip", `status-${data.status}`]}>{statusLabels[data.status]}</span>
+						</div>
+						<div class="anime-copy">
+							<div class="anime-title-row">
+								<h2>{data.title}</h2>
+								{data.score !== undefined && <strong>{data.score}<small>/10</small></strong>}
+							</div>
+							<p class="anime-year">{data.year}</p>
+							{data.review && <p class="anime-review">{data.review}</p>}
+							{data.url && (
+								<a class="anime-link" href={data.url} target="_blank" rel="noreferrer">
+									查看作品
+									<Icon name="fa6-solid:arrow-up-right-from-square" />
+								</a>
+							)}
+						</div>
+					</article>
+				))}
+			</div>
+		)}
+	</section>
+</MainGridLayout>
+
+<style>
+	.content-surface { background: var(--card-bg); border-radius: var(--radius-large); }
+	.section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+	.section-heading h1 { color: var(--deep-text); font-size: 1.75rem; font-weight: 700; line-height: 1.2; }
+	:global(.dark) .section-heading h1 { color: rgba(255, 255, 255, .9); }
+	.section-heading > span { color: var(--primary); font-size: .875rem; font-weight: 700; }
+	.section-kicker { color: var(--accent-cyan); font-size: .7rem; font-weight: 700; margin-bottom: .25rem; }
+	.anime-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+	.anime-card { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); min-height: 10.5rem; border: 1px solid var(--line-color); border-radius: var(--radius-large); overflow: hidden; background: color-mix(in oklab, var(--card-bg) 94%, var(--primary)); }
+	.anime-cover { position: relative; background: var(--btn-regular-bg); overflow: hidden; }
+	.anime-cover img { width: 100%; height: 100%; object-fit: cover; }
+	.anime-cover > :global(svg) { position: absolute; inset: 0; margin: auto; width: 2.5rem; height: 2.5rem; color: var(--primary); opacity: .45; }
+	.status-chip { position: absolute; top: .5rem; left: .5rem; border-radius: .25rem; padding: .2rem .45rem; color: white; background: rgba(22, 24, 30, .82); font-size: .7rem; font-weight: 700; }
+	.status-watching { background: color-mix(in oklab, var(--accent-cyan) 75%, black); }
+	.status-completed { background: color-mix(in oklab, var(--primary) 72%, black); }
+	.anime-copy { min-width: 0; padding: 1rem; }
+	.anime-title-row { display: flex; align-items: start; justify-content: space-between; gap: .5rem; }
+	.anime-title-row h2 { color: var(--deep-text); font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; }
+	:global(.dark) .anime-title-row h2 { color: rgba(255, 255, 255, .9); }
+	.anime-title-row strong { flex: none; color: var(--primary); font-size: 1.125rem; }
+	.anime-title-row small { font-size: .65rem; opacity: .6; }
+	.anime-year { color: var(--accent-cyan); font-size: .75rem; margin-top: .15rem; }
+	.anime-review { color: color-mix(in oklab, var(--deep-text) 70%, transparent); font-size: .875rem; line-height: 1.55; margin-top: .65rem; }
+	:global(.dark) .anime-review { color: rgba(255, 255, 255, .62); }
+	.anime-link { display: inline-flex; align-items: center; gap: .35rem; color: var(--primary); font-size: .8rem; font-weight: 700; margin-top: .75rem; }
+	.anime-link :global(svg) { width: .7rem; }
+	.empty-state { min-height: 24rem; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem; text-align: center; border: 1px dashed var(--line-color); border-radius: var(--radius-large); }
+	.empty-state :global(svg) { width: 3rem; height: 3rem; color: var(--primary); margin-bottom: 1rem; }
+	.empty-state h2 { color: var(--deep-text); font-size: 1.125rem; font-weight: 700; }
+	:global(.dark) .empty-state h2 { color: rgba(255, 255, 255, .9); }
+	.empty-state p { color: color-mix(in oklab, var(--deep-text) 58%, transparent); margin-top: .4rem; }
+	:global(.dark) .empty-state p { color: rgba(255, 255, 255, .48); }
+	@media (max-width: 767px) {
+		.anime-grid { grid-template-columns: 1fr; }
+		.anime-card { grid-template-columns: 6.5rem minmax(0, 1fr); }
+		.empty-state { min-height: 18rem; }
+	}
+</style>

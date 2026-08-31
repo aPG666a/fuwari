@@ -1,0 +1,97 @@
+---
+import { getCollection, render } from "astro:content";
+import Markdown from "@components/misc/Markdown.astro";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
+
+const notes = (
+	await getCollection("notes", ({ data }) =>
+		import.meta.env.PROD ? data.draft !== true : true,
+	)
+).sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+
+const renderedNotes = await Promise.all(
+	notes.map(async (entry) => ({
+		entry,
+		NoteContent: (await render(entry)).Content,
+	})),
+);
+
+const dateFormatter = new Intl.DateTimeFormat("zh-CN", {
+	year: "numeric",
+	month: "2-digit",
+	day: "2-digit",
+	hour: "2-digit",
+	minute: "2-digit",
+	hour12: false,
+});
+---
+
+<MainGridLayout title="随记" description="PG 随手记下的生活与想法。">
+	<section class="content-surface p-5 md:p-7" aria-labelledby="notes-title">
+		<header class="section-heading">
+			<div>
+				<p class="section-kicker">MOMENTS</p>
+				<h1 id="notes-title">随记</h1>
+			</div>
+			<span>{notes.length} 条</span>
+		</header>
+
+		{renderedNotes.length === 0 ? (
+			<div class="empty-state">
+				<Icon name="material-symbols:edit-note-rounded" />
+				<h2>这里暂时很安静</h2>
+				<p>值得记住的日常，会在合适的时候落到这里。</p>
+			</div>
+		) : (
+			<div class="notes-list">
+				{renderedNotes.map(({ entry, NoteContent }) => (
+					<article class="note-item">
+						<div class="note-marker" aria-hidden="true"></div>
+						<div class="note-head">
+							<time datetime={entry.data.published.toISOString()}>{dateFormatter.format(entry.data.published)}</time>
+							<div class="note-tags">{entry.data.tags.map((tag) => <span>#{tag}</span>)}</div>
+						</div>
+						<Markdown class="note-body markdown-content"><NoteContent /></Markdown>
+						{entry.data.images.length > 0 && (
+							<div class:list={["note-images", { single: entry.data.images.length === 1 }]}>
+								{entry.data.images.map((src) => <img src={src} alt="随记配图" loading="lazy" />)}
+							</div>
+						)}
+					</article>
+				))}
+			</div>
+		)}
+	</section>
+</MainGridLayout>
+
+<style>
+	.content-surface { background: var(--card-bg); border-radius: var(--radius-large); }
+	.section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+	.section-heading h1 { color: var(--deep-text); font-size: 1.75rem; font-weight: 700; line-height: 1.2; }
+	:global(.dark) .section-heading h1 { color: rgba(255, 255, 255, .9); }
+	.section-heading > span { color: var(--primary); font-size: .875rem; font-weight: 700; }
+	.section-kicker { color: var(--accent-cyan); font-size: .7rem; font-weight: 700; margin-bottom: .25rem; }
+	.notes-list { position: relative; padding-left: 1.25rem; }
+	.notes-list::before { content: ""; position: absolute; top: .5rem; bottom: .5rem; left: .23rem; width: 1px; background: var(--line-color); }
+	.note-item { position: relative; border: 1px solid var(--line-color); border-radius: var(--radius-large); padding: 1.1rem 1.2rem; margin-bottom: 1rem; }
+	.note-marker { position: absolute; left: -1.38rem; top: 1.35rem; width: .7rem; height: .7rem; border: 2px solid var(--card-bg); border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 0 1px var(--accent-cyan); }
+	.note-head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .75rem; }
+	.note-head time { color: var(--accent-cyan); font-size: .75rem; font-weight: 700; }
+	.note-tags { display: flex; flex-wrap: wrap; justify-content: end; gap: .35rem; color: var(--primary); font-size: .75rem; }
+	.note-images { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin-top: 1rem; }
+	.note-images.single { grid-template-columns: minmax(0, 32rem); }
+	.note-images img { width: 100%; aspect-ratio: 1; border-radius: .375rem; object-fit: cover; }
+	.note-images.single img { aspect-ratio: 16 / 9; }
+	.empty-state { min-height: 24rem; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem; text-align: center; border: 1px dashed var(--line-color); border-radius: var(--radius-large); }
+	.empty-state :global(svg) { width: 3rem; height: 3rem; color: var(--primary); margin-bottom: 1rem; }
+	.empty-state h2 { color: var(--deep-text); font-size: 1.125rem; font-weight: 700; }
+	:global(.dark) .empty-state h2 { color: rgba(255, 255, 255, .9); }
+	.empty-state p { color: color-mix(in oklab, var(--deep-text) 58%, transparent); margin-top: .4rem; }
+	:global(.dark) .empty-state p { color: rgba(255, 255, 255, .48); }
+	@media (max-width: 767px) {
+		.note-head { align-items: start; flex-direction: column; }
+		.note-tags { justify-content: start; }
+		.empty-state { min-height: 18rem; }
+	}
+</style>

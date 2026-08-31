@@ -1,9 +1,11 @@
-# About
-This is the demo site for [Fuwari](https://github.com/saicaca/fuwari).
+# 关于 PGの小站
 
-::github{repo="saicaca/fuwari"}
+你好，我是 **PG**。
 
-> ### Sources of images used in this site
-> - [Unsplash](https://unsplash.com/)
-> - [星と少女](https://www.pixiv.net/artworks/108916539) by [Stella](https://www.pixiv.net/users/93273965)
-> - [Rabbit - v1.4 Showcase](https://civitai.com/posts/586908) by [Rabbit_YourMajesty](https://civitai.com/user/Rabbit_YourMajesty)
+这里是我的个人博客，主要记录技术实践、动漫感想和日常片段。它不是一份履历，也不追求固定的更新节奏，只保存我愿意反复翻看的内容。
+
+> 记住，你是最棒的。
+
+你可以在 [GitHub](https://github.com/aPG666a) 找到我，也可以通过站内的文章、追番和随记继续了解这个小站。
+
+本站基于 [Fuwari](https://github.com/saicaca/fuwari) 构建，内容采用 CC BY-NC-SA 4.0 协议发布。

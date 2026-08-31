@@ -1,0 +1,32 @@
+---
+import { giscusConfig } from "@/config";
+
+const ready =
+	giscusConfig.enabled &&
+	giscusConfig.repoId.length > 0 &&
+	giscusConfig.categoryId.length > 0;
+---
+
+{ready && (
+	<section class="giscus-panel card-base p-5 md:p-7 mt-4" aria-label="文章评论">
+		<div class="giscus"></div>
+		<script
+			is:inline
+			src="https://giscus.app/client.js"
+			data-repo={giscusConfig.repo}
+			data-repo-id={giscusConfig.repoId}
+			data-category={giscusConfig.category}
+			data-category-id={giscusConfig.categoryId}
+			data-mapping="pathname"
+			data-strict="1"
+			data-reactions-enabled="1"
+			data-emit-metadata="0"
+			data-input-position="bottom"
+			data-theme="preferred_color_scheme"
+			data-lang="zh-CN"
+			data-loading="lazy"
+			crossorigin="anonymous"
+			async
+		></script>
+	</section>
+)}

@@ -1,0 +1,41 @@
+{
+	"site": {
+		"title": "PGの小站",
+		"subtitle": "技术、动漫与日常",
+		"description": "PG 的个人博客，记录技术实践、动漫感想与生活片段。",
+		"url": "https://blog.likeai520.cc/",
+		"lang": "zh_CN",
+		"timezone": "Asia/Shanghai"
+	},
+	"profile": {
+		"name": "PG",
+		"bio": "记住，你是最棒的",
+		"avatar": "assets/images/pg-avatar.webp",
+		"links": [
+			{
+				"name": "GitHub",
+				"icon": "fa6-brands:github",
+				"url": "https://github.com/aPG666a"
+			}
+		]
+	},
+	"theme": {
+		"hue": 345,
+		"fixed": true,
+		"banner": "assets/images/pg-hero.webp",
+		"bannerPosition": "center"
+	},
+	"seo": {
+		"defaultOgImage": "/images/pg-og-default.webp"
+	},
+	"giscus": {
+		"enabled": false,
+		"repo": "aPG666a/fuwari",
+		"repoId": "",
+		"category": "Blog Comments",
+		"categoryId": ""
+	},
+	"analytics": {
+		"cloudflareBeaconToken": ""
+	}
+}

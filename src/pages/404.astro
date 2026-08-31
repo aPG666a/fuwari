@@ -1,0 +1,25 @@
+---
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { Icon } from "astro-icon/components";
+---
+
+<MainGridLayout title="页面未找到" description="这个页面可能已经离开了。">
+	<section class="not-found">
+		<p>404</p>
+		<Icon name="material-symbols:explore-off-outline-rounded" />
+		<h1>这里没有找到想看的内容</h1>
+		<span>也许页面换了位置，或者它还没有写好。</span>
+		<a href="/">返回首页</a>
+	</section>
+</MainGridLayout>
+
+<style>
+	.not-found { min-height: 30rem; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem; text-align: center; border-radius: var(--radius-large); background: var(--card-bg); }
+	.not-found > p { color: var(--primary); font-size: 3.5rem; font-weight: 700; line-height: 1; }
+	.not-found :global(svg) { width: 3rem; height: 3rem; color: var(--accent-cyan); margin: 1.5rem 0; }
+	.not-found h1 { color: var(--deep-text); font-size: 1.35rem; font-weight: 700; }
+	:global(.dark) .not-found h1 { color: rgba(255, 255, 255, .9); }
+	.not-found span { color: color-mix(in oklab, var(--deep-text) 58%, transparent); margin-top: .5rem; }
+	:global(.dark) .not-found span { color: rgba(255, 255, 255, .48); }
+	.not-found a { border-radius: .375rem; margin-top: 1.5rem; padding: .65rem 1rem; color: white; background: var(--primary); font-weight: 700; }
+</style>

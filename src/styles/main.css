@@ -116,6 +116,11 @@
     @apply cursor-zoom-in
 }
 
+#banner img {
+    transform: translate3d(0, var(--hero-parallax, 0), 0) scale(1.035);
+    will-change: transform;
+}
+
 ::selection {
     background-color: var(--selection-bg)
 }

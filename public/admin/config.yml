@@ -1,0 +1,148 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.203.2/schema/sveltia-cms.json
+backend:
+  name: github
+  repo: aPG666a/fuwari
+  branch: main
+  base_url: https://auth.blog.likeai520.cc
+  auth_methods: [oauth]
+  automatic_deployments: false
+
+publish_mode: simple
+site_url: https://blog.likeai520.cc
+display_url: https://blog.likeai520.cc
+logo_url: /images/pg-og-default.webp
+media_folder: public/uploads
+public_folder: /uploads
+
+output:
+  omit_empty_optional_fields: true
+
+collections:
+  - name: posts
+    label: 文章
+    label_singular: 文章
+    folder: src/content/posts
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}} · {{published}}"
+    sortable_fields: [published, updated, title]
+    view_filters:
+      - { label: 草稿, field: draft, pattern: true }
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 发布日期, name: published, widget: datetime, date_format: YYYY-MM-DD, time_format: false }
+      - { label: 更新日期, name: updated, widget: datetime, date_format: YYYY-MM-DD, time_format: false, required: false }
+      - { label: 摘要, name: description, widget: text }
+      - { label: 封面, name: image, widget: image, required: false }
+      - { label: 分类, name: category, widget: string, required: false }
+      - { label: 标签, name: tags, widget: list, field: { label: 标签, name: tag, widget: string }, required: false }
+      - { label: 语言, name: lang, widget: hidden, default: zh_CN }
+      - { label: 草稿, name: draft, widget: boolean, default: true }
+      - { label: 正文, name: body, widget: markdown }
+
+  - name: notes
+    label: 随记
+    label_singular: 随记
+    folder: src/content/notes
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    identifier_field: published
+    slug: "{{year}}-{{month}}-{{day}}-{{hour}}-{{minute}}"
+    summary: "{{published}} · {{body}}"
+    sortable_fields: [published]
+    fields:
+      - { label: 发布时间, name: published, widget: datetime, date_format: YYYY-MM-DD, time_format: HH:mm, picker_utc: false }
+      - { label: 图片, name: images, widget: list, field: { label: 图片, name: image, widget: image }, required: false }
+      - { label: 标签, name: tags, widget: list, field: { label: 标签, name: tag, widget: string }, required: false }
+      - { label: 草稿, name: draft, widget: boolean, default: true }
+      - { label: 正文, name: body, widget: markdown }
+
+  - name: anime
+    label: 追番
+    label_singular: 动画
+    folder: src/content/anime
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    slug: "{{slug}}"
+    summary: "{{title}} · {{year}} · {{status}}"
+    sortable_fields: [year, title, status]
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 封面, name: cover, widget: image, required: false }
+      - { label: 年份, name: year, widget: number, value_type: int, min: 1900, max: 2200 }
+      - label: 状态
+        name: status
+        widget: select
+        options:
+          - { label: 想看, value: planned }
+          - { label: 在看, value: watching }
+          - { label: 看过, value: completed }
+      - { label: 评分, name: score, widget: number, value_type: float, min: 0, max: 10, step: 0.5, required: false }
+      - { label: 短评, name: review, widget: text, required: false }
+      - { label: 外部链接, name: url, widget: string, required: false }
+      - { label: 草稿, name: draft, widget: boolean, default: true }
+      - { label: 补充内容, name: body, widget: markdown, required: false }
+
+  - name: settings
+    label: 站点资料
+    files:
+      - name: site
+        label: PGの小站
+        file: src/data/site.json
+        format: json
+        fields:
+          - label: 站点
+            name: site
+            widget: object
+            fields:
+              - { label: 名称, name: title, widget: string }
+              - { label: 副标题, name: subtitle, widget: string }
+              - { label: 描述, name: description, widget: text }
+              - { label: 正式地址, name: url, widget: string }
+              - { label: 语言, name: lang, widget: select, options: [zh_CN] }
+              - { label: 时区, name: timezone, widget: string }
+          - label: 作者
+            name: profile
+            widget: object
+            fields:
+              - { label: 名称, name: name, widget: string }
+              - { label: 简介, name: bio, widget: string }
+              - { label: 头像, name: avatar, widget: string }
+              - label: 社交链接
+                name: links
+                widget: list
+                fields:
+                  - { label: 名称, name: name, widget: string }
+                  - { label: 图标, name: icon, widget: string }
+                  - { label: 地址, name: url, widget: string }
+          - label: 主题
+            name: theme
+            widget: object
+            fields:
+              - { label: 色相, name: hue, widget: number, value_type: int, min: 0, max: 360 }
+              - { label: 锁定主题色, name: fixed, widget: boolean }
+              - { label: 横幅, name: banner, widget: string }
+              - { label: 横幅位置, name: bannerPosition, widget: select, options: [top, center, bottom] }
+          - label: SEO
+            name: seo
+            widget: object
+            fields:
+              - { label: 默认分享图, name: defaultOgImage, widget: string }
+          - label: Giscus
+            name: giscus
+            widget: object
+            fields:
+              - { label: 启用评论, name: enabled, widget: boolean }
+              - { label: 仓库, name: repo, widget: string }
+              - { label: 仓库 ID, name: repoId, widget: string, required: false }
+              - { label: 分类, name: category, widget: string }
+              - { label: 分类 ID, name: categoryId, widget: string, required: false }
+          - label: 统计
+            name: analytics
+            widget: object
+            fields:
+              - { label: Cloudflare Beacon Token, name: cloudflareBeaconToken, widget: string, required: false }
