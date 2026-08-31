@@ -5,7 +5,7 @@ backend:
   branch: main
   base_url: https://auth.blog.likeai520.cc
   auth_methods: [oauth]
-  automatic_deployments: false
+  skip_ci: false
 
 publish_mode: simple
 site_url: https://blog.likeai520.cc
