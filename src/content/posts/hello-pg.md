@@ -1,6 +1,6 @@
 ---
 title: 你好，这里是 PGの小站
-published: 2026-08-31
+published: 2026-08-25
 description: 从今天开始，在这里记录技术、动漫与日常。
 image: /images/pg-og-default.webp
 category: 日常
